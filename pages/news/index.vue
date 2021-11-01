@@ -87,23 +87,20 @@
 
 
 export default {
+  async asyncData({app}) {
+    const ListArticle = await app.$axios.$get('http://localhost:8000/api/article');
+    return {ListArticle}
+  },
   data(){
     return{
       ListArticle:null,
     }
   },
-  async asyncData({app}) {
-    const ListArticle = await app.$axios.$get('http://localhost:8000/api/article');
-    return {ListArticle}
-  },
   methods:{
     async upDate(){
       this.ListArticle = await this.$axios.$get('http://localhost:8000/api/article');
-      console.log(this.ListArticle.data)
-      console.log('uploadDone1');
     },
     async excelExport() {
-      // console.log(this.$axios);
       const uri = 'http://localhost:8000/api/export-csv';
       await this.$axios.post(uri);
     },
