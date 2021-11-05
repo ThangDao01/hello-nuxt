@@ -72,7 +72,7 @@ export default {
     }
   },
   async fetch() {
-    const uri = 'http://localhost:8000/api/account/new-password/' + this.$route.params.mail
+    const uri = '/account/new-password/' + this.$route.params.mail
     const mailCheck = await this.$axios.$get(uri)
     switch (mailCheck) {
       case 1:
@@ -91,7 +91,7 @@ export default {
   },
   methods: {
     async onUpdate() {
-      const uri = 'http://localhost:8000/api/account/reset-password/' + this.$route.params.mail
+      const uri = '/account/reset-password/' + this.$route.params.mail
       this.checking = await this.$axios.post(uri, this.user)
       switch (this.checking.data) {
         case 1:
@@ -107,7 +107,6 @@ export default {
           this.typeMessenger = 'danger'
           break
       }
-
     }
   }
 }

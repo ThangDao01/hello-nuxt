@@ -87,8 +87,11 @@
 
 
 export default {
-  async asyncData({app}) {
-    const ListArticle = await app.$axios.$get('http://localhost:8000/api/article');
+  async asyncData({app,redirect}) {
+    if (!app.$auth.loggedIn) {
+      return redirect('/account/login')
+    }
+    const ListArticle = await app.$axios.$get('/article');
     return {ListArticle}
   },
   data(){
@@ -98,10 +101,10 @@ export default {
   },
   methods:{
     async upDate(){
-      this.ListArticle = await this.$axios.$get('http://localhost:8000/api/article');
+      this.ListArticle = await this.$axios.$get('/article');
     },
     async excelExport() {
-      const uri = 'http://localhost:8000/api/export-csv';
+      const uri = '/export-csv';
       await this.$axios.post(uri);
     },
     onFileSelected(event) {
@@ -110,9 +113,9 @@ export default {
     async onUpload() {
       const file = new FormData();
       file.append('file', this.selectedFile, this.selectedFile.name)
-      const uri = 'http://localhost:8000/api/import-csv';
+      const uri = '/import-csv';
       await this.$axios.post(uri, file);
-      this.ListArticle = await this.$axios.$get('http://localhost:8000/api/article');
+      this.ListArticle = await this.$axios.$get('/article');
     },
   }
 };

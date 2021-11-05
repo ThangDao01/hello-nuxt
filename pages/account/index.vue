@@ -11,45 +11,10 @@
         <div id="panel-1" class="panel">
           <div class="panel-hdr">
             <h2>
-              News <span class="fw-300"><i>Table</i></span>
+              News <span class="fw-300"><i>Account Table</i></span>
             </h2>
-
-            <div class="panel-toolbar">
-              <form action="/import-csv" method="post" enctype="multipart/form-data">
-                <div class="form-group">
-                  <div class="form-group" style="margin: 10px">
-                    <div class="input-group">
-                      <div class="custom-file">
-                        <input type="file" name="file" accept=".xlsx"><br>
-                      </div>
-                      <div class="input-group-append">
-                        <button class="btn btn-outline-default waves-effect waves-themed" type="submit">Import CSV</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </form>
-              <form action="/export-csv" method="POST">
-                <div class="form-group">
-                  <div class="form-group" style="margin: 10px">
-                    <div class="input-group">
-                      <div class="input-group-append">
-                        <button class="btn btn-outline-default waves-effect waves-themed" type="submit" >Export CSV</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </form>
-            </div>
           </div>
           <div class="panel-container show">
-<!--            <div class="panel-tag" v-if='error'>-->
-<!--              <ul v-for='(err,index) as errors'>-->
-<!--                @foreach ($errors->all() as $error)-->
-<!--                <li>{{ $error }}</li>-->
-<!--                @endforeach-->
-<!--              </ul>-->
-<!--            </div>-->
             <div class="panel-content">
               <!-- datatable start -->
               <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100"
@@ -68,8 +33,8 @@
                   <td>{{ account.FullName}}</td>
                   <td>{{ account.UserName}}</td>
                   <td>{{ account.email}}</td>
-                  <td style="color: green" v-if='account.Status===1'>Đang hoạt động</td>
-                  <td style="color: red" v-if='account.Status===0'>Khóa</td>
+                  <td style="color: green" v-if='account.Status===1'>Online</td>
+                  <td style="color: red" v-if='account.Status===0'>Offline</td>
                   <td>
                     <nuxt-link :to="'/reset-password/'+account.email">
                       Reset Password
@@ -88,8 +53,11 @@
 
 <script>
 export default {
-  async asyncData({app}) {
-    const ListAccount = await app.$axios.$get('http://localhost:8000/api/account/data');
+  async asyncData({app,redirect}) {
+    if (!app.$auth.loggedIn) {
+      return redirect('/account/login')
+    }
+    const ListAccount = await app.$axios.$get('/account/data');
     return {ListAccount};
   },
 }

@@ -1,16 +1,10 @@
 <template>
   <div class='card p-4 rounded-plus bg-faded'>
-    <!--                  @if(\Illuminate\Support\Facades\Session::has('message'))-->
-    <!--                  <div class="alert alert-{{\Illuminate\Support\Facades\Session::get('style')}}" role="alert">-->
-    <!--                    {!! \Illuminate\Support\Facades\Session::get('message') !!}-->
-    <!--                  </div>-->
-    <!--                  @endif-->
     <div v-if='messenger'>
       <div :class="'alert alert-'+typeMessenger" role="alert" >
         {{messenger}}
       </div>
     </div>
-
     <form @submit.prevent='onLogin()'>
       <div class='form-group'>
         <label class='form-label' for='email'>Email</label>
@@ -46,33 +40,39 @@ export default {
         Email: '',
         Password: ''
       },
-      checkLogin: 0,
       messenger:'',
       typeMessenger:'',
     }
   },
   methods: {
     async onLogin() {
-      const uri = 'http://localhost:8000/api/account/login'
-      this.checkLogin = await this.$axios.post(uri, this.user)
-      switch (this.checkLogin.data) {
-        case 1:
-          await this.$router.push('/account');
-          break;
-        case 2:
-          this.messenger = 'Bạn đang đăng nhập trên thiết bị khác';
-          this.typeMessenger = 'danger';
-          break;
-        case 3:
-          this.messenger = 'Sai tài khoản hoặc mật khẩu';
-          this.typeMessenger = 'danger';
-          break;
-        default:
-          this.messenger = 'Hệ thống lỗi!!!';
-          this.typeMessenger = 'danger';
-          break;
-      }
 
+      try {
+        console.log(this.$auth.loggedIn);
+        const response = await this.$auth.loginWith('local', {data: this.user})
+        console.log(response)
+        switch (response.data) {
+          case 1:
+            this.messenger = 'OK!';
+            this.typeMessenger = 'success';
+              await this.$router.push('/account');
+            break;
+          case 2:
+            this.messenger = 'Bạn đang đăng nhập trên thiết bị khác';
+            this.typeMessenger = 'danger';
+            break;
+          case 3:
+            this.messenger = 'Sai tài khoản hoặc mật khẩu';
+            this.typeMessenger = 'danger';
+            break;
+          default:
+            this.messenger = 'Hệ thống lỗi!!!';
+            this.typeMessenger = 'danger';
+            break;
+        }
+      } catch (err) {
+        console.log(err)
+      }
     }
   }
 }

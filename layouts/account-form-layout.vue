@@ -11,9 +11,13 @@
                   <span class="page-logo-text mr-1">SmartAdmin WebApp</span>
                 </a>
               </div>
-              <a href="page_register.html" class="btn-link text-white ml-auto">
+              <nuxt-link to='/account/register' v-if='!register' class="btn-link text-white ml-auto">
                 Create Account
-              </a>
+              </nuxt-link>
+              <nuxt-link to='/account/login' v-if='register' class="btn-link text-white ml-auto">
+                Login
+              </nuxt-link>
+
             </div>
           </div>
           <div class="flex-1" style="background: url('/img/svg/pattern-1.svg') no-repeat center bottom fixed; background-size: cover;">
@@ -68,6 +72,11 @@
 <script>
 export default {
   name: 'account-form-layout',
+  data(){
+    return {
+        register: false,
+    }
+  },
   head() {
     return {
       link: [

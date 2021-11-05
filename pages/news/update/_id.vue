@@ -106,12 +106,12 @@ export default {
         }
     },
     async created() {
-        const uri = `http://localhost:8000/api/news/${this.$route.params.id}`;
+        const uri = `/news/${this.$route.params.id}`;
         this.article = await this.$axios.$get(uri);
     },
     methods:{
         onSave(){
-            const uri = `http://localhost:8000/api/article/update/${this.$route.params.id}`;
+            const uri = `/article/update/${this.$route.params.id}`;
             this.$axios.post(uri, this.article).then((response) => {
                 this.$router.push('/news');
             });

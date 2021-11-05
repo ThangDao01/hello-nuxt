@@ -1825,7 +1825,6 @@
 
 <script>
 export default {
-
   head() {
     return {
       link: [
